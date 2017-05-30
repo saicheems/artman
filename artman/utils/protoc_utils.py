@@ -14,7 +14,6 @@
 
 """Utilities for protoc tasks"""
 
-
 import collections
 import os
 import re
