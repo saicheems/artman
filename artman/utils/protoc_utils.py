@@ -14,9 +14,12 @@
 
 """Utilities for protoc tasks"""
 
+
+import collections
 import os
 import re
 import subprocess
+import types
 
 import six
 
@@ -299,9 +302,9 @@ def prepare_pkg_dir(output_dir, api_name, api_version, organization_name,
 
 
 def find_protos(proto_paths, excluded_proto_path):
-    """Searches along `proto_path` for .proto files and returns a generator of
+    """Searches along `proto_paths` for .proto files and returns a generator of
     paths"""
-    if type(proto_paths) is not list:
+    if not isinstance(proto_paths, (types.GeneratorType, collections.MutableSequence)):
         raise ValueError("proto_paths must be a list")
     for path in proto_paths:
         for root, _, files in os.walk(path):
