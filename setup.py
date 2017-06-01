@@ -17,25 +17,17 @@
 
 """Setup tool for artman."""
 
+import io
+import os
 import setuptools
 
-from pip.req import parse_requirements
-
-requirements = [
-    'gcloud>=0.10.0',
-    'grpcio-tools>=1.0.2',
-    'kazoo>=2.2.1',
-    'oslo.utils>=3.4.0',
-    'pyyaml>=3.11',
-    'taskflow>=1.25.0,<2.0.0',
-    'yapf>=0.6.2',
-    'google-apitools',
-    'requests>=2.10.0,<3.0.0'
-]
+cur_dir = os.path.realpath(os.path.dirname(__file__))
+with io.open('%s/requirements.txt' % cur_dir) as requirements_file:
+    requirements = requirements_file.read().strip().split('\n')
 
 setuptools.setup(
     name='googleapis-artman',
-    version='0.1.0',
+    version='0.4.4',
     description='Google API artifact manager',
     author='Google Inc',
     author_email='googleapis-packages@google.com',
@@ -43,7 +35,16 @@ setuptools.setup(
     license='Apache-2.0',
     install_requires=requirements,
     packages=setuptools.find_packages(),
-    scripts=['execute_pipeline.py', 'start_conductor.py'],
+    entry_points={
+        'console_scripts': [
+            'artman = artman.cli.main:main',
+            'configure-artman = artman.cli.configure:configure',
+            'start-artman-conductor = artman.cli.conductor:start',
+        ],
+    },
+    scripts=[
+        'test/smoketest_artman.py',
+    ],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
@@ -51,5 +52,8 @@ setuptools.setup(
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ]
 )

@@ -15,9 +15,9 @@
 import os
 import pytest
 import unittest
-import yaml
+from ruamel import yaml
 
-from pipeline.tasks import package_metadata_tasks
+from artman.tasks import package_metadata_tasks
 
 
 class PackageMetadataConfigTest(unittest.TestCase):
@@ -39,20 +39,29 @@ class PackageMetadataConfigTest(unittest.TestCase):
             repo_root,
             'test/testdata/googleapis_test/gapic/packaging/api_defaults.yaml')
 
-        task.execute(api_name='fake', api_version='v1',
-                     organization_name='google-cloud',
-                     output_dir=str(self.output_dir),
-                     package_dependencies_yaml=package_dependencies_yaml,
-                     package_defaults_yaml=package_defaults_yaml,
-                     proto_deps=['googleapis-common-protos'],
-                     repo_root=repo_root,
-                     src_proto_path=['path/to/protos'],
-                     package_type="grpc_client",
-                     gapic_api_yaml=[])
+        task.execute(
+            api_name='fake',
+            api_version='v1',
+            gapic_api_yaml=[],
+            language='python',
+            local_paths={
+                'googleapis': '%s/googleapis' % repo_root,
+                'reporoot': repo_root,
+            },
+            organization_name='google-cloud',
+            output_dir=str(self.output_dir),
+            package_dependencies_yaml=package_dependencies_yaml,
+            package_defaults_yaml=package_defaults_yaml,
+            proto_deps=['googleapis-common-protos'],
+            package_type="grpc_client",
+            src_proto_path=['path/to/protos'],
+            generated_package_version={'lower': '0.17.29', 'upper': '0.18dev'},
+            release_level='beta'
+        )
         with open(os.path.join(str(self.output_dir),
                                'google-cloud-fake-v1_package.yaml')) as f:
-            actual = yaml.load(f)
+            actual = yaml.safe_load(f)
         with open('test/testdata/google-cloud-fake-v1_package.yaml') as f:
-            expected = yaml.load(f)
+            expected = yaml.safe_load(f)
         # Don't compare files directly because yaml doesn't preserve ordering
         self.assertDictEqual(actual, expected)

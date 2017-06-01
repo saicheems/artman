@@ -18,27 +18,77 @@ from the protobuf source IDL and additional configuration in YAML files.
 
 Installation
 ------------
+1. Optional: set up a virtualenv for your Python work. Choose one of
+   the following:
 
-At the moment, this library is under development, so please see
-`using a development checkout`_ for installation instructions
+   1. (recommended) `virtualenvwrapper`_ so you don't have to keep
+      track of where your virtualenv is on the filesystem:
+      
+      .. code::
+         
+         sudo pip install virtualenv virtualenvwrapper
+         mkvirtualenv --python=`which python3` artman
 
-.. _`using a development checkout`: https://github.com/googleapis/artman/blob/master/CONTRIBUTING.rst#using-a-development-checkout
+      To use this virtual environment later:
+      
+      .. code ::
+      
+         workon artman
+
+   2. `virtualenv`_ in your current directory:
+      
+      .. code::
+         
+         sudo pip install virtualenv
+         virtualenv env
+         source env/bin/activate
+
+2. Install artman directly from pip:
+
+   .. code::
+
+      pip install googleapis-artman
+
+You may need root privileges if you are not installing inside of a virtualenv.
+This will make the ``artman`` command available on your system.
+
+.. _`virtualenvwrapper`: https://virtualenvwrapper.readthedocs.io/en/latest/
+.. _`virtualenv`: https://pypi.python.org/pypi/virtualenv
+
+
+Prerequisites
+-------------
+1. Install `googleapis`_
+2. Install `toolkit`_
+3. Install Java
+4. Some languages may have additional dependencies; refer to the ``Dockerfile``
+   in this repository for canonical installation requirements.
+
+.. _`googleapis`: https://github.com/googleapis/googleapis
+.. _`toolkit`: https://github.com/googleapis/toolkit
 
 
 Usage
 -----
 
-Currently, this tool can only be run in the development environment of the
-development team, as some dependencies are yet to be published. See USAGE_ for
-details.
+Before you can use artman, you will need a configuration file. You can run
+``configure-artman`` to create a simple configuration file.
 
-.. _USAGE: https://github.com/googleapis/artman/blob/master/USAGE.rst
+For building a GAPIC (the most common task), the usage looks like:
+
+.. code::
+
+    artman --api pubsub --language python
+
+Artman also takes a ``--publish`` argument to decide where to stage the
+code. Using ``--publish github`` will create a pull request on GitHub
+automatically.
 
 
 Python Versions
 ---------------
 
-artman is currently tested with Python 2.7.
+artman is currently tested with Python 2.7 and Python 3.4.
 
 
 Contributing
@@ -46,7 +96,8 @@ Contributing
 
 Contributions to this library are always welcome and highly encouraged.
 
-See the `CONTRIBUTING`_ documentation for more information on how to get started.
+See the `CONTRIBUTING`_ documentation for more information on how to get
+started.
 
 .. _`CONTRIBUTING`: https://github.com/googleapis/artman/blob/master/CONTRIBUTING.rst
 
@@ -66,7 +117,8 @@ stable.
 Details
 -------
 
-For detailed documentation of the modules in artman, please watch `DOCUMENTATION`_.
+For detailed documentation of the modules in artman, please watch
+`DOCUMENTATION`_.
 
 .. _`DOCUMENTATION`: https://googleapis-artman.readthedocs.org/
 
